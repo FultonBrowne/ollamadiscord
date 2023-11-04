@@ -42,6 +42,7 @@ if __name__ == "__main__":
 
     @client.event
     async def on_message(message):
+        print("start message")
         history = ChatMessageHistory()
         await separate_messages(message.channel, history)
         # Ignore messages sent by the bot
