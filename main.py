@@ -7,12 +7,21 @@ import json
 from langchain.memory import ChatMessageHistory
 
 
+async def gather(ai):
+    ret = []
+    async for x in ai:
+        ret.append(x)
+    return ret
+
+
 async def separate_messages(channel, history):
     # Check if the bot has permissions to read the channel history
 
     # Fetch the last 50 messages from the channel
     messages = channel.history(limit=50)
-    async for i in messages:
+    ml = await gather(messages)
+    reversed(ml)
+    for i in ml:
         if i.author == client.user:
             history.add_ai_message(i.content)
         else:
@@ -45,7 +54,9 @@ if __name__ == "__main__":
         print("start message")
         history = ChatMessageHistory()
         await separate_messages(message.channel, history)
+        history.add_user_message(message.content)
         # Ignore messages sent by the bot
+        print(history.messages)
         if message.author == client.user:
             return
 
@@ -57,6 +68,7 @@ if __name__ == "__main__":
         # elif message.channel.id in allowed_channels:
         else:
             return
+
 
     # Replace 'YOUR_BOT_TOKEN' with your actual bot token
     client.run(DISCORD_TOKEN)
