@@ -50,7 +50,7 @@ if __name__ == "__main__":
             return
 
         # Check if the message is in DMs
-        if isinstance(message.channel, discord.DMChannel):
+        if isinstance(message.channel, discord.DMChannel) or client.user in message.mentions:
             async with message.channel.typing():
                 t = llm.predict_messages(messages=history.messages)
                 await message.channel.send(t.content)
